@@ -131,7 +131,7 @@ exports.api = {
     });
   },
   create: (ctx, next) => {
-    var user_id = req.api_user._id;
+    var user_id = ctx.api_user._id;
 
     User.create({username: ctx.request.body.username,password: ctx.request.body.password,avatar: ctx.request.body.avatar,phone_number: ctx.request.body.phone_number,address: ctx.request.body.address}, function (err, user) {
       if (err) {
@@ -144,7 +144,7 @@ exports.api = {
     });
   },
   update: (ctx, next) => {
-    var user_id = req.api_user._id;
+    var user_id = ctx.api_user._id;
     var id = ctx.params.user_id;
     User.updateById(id, {username: ctx.request.body.username,password: ctx.request.body.password,avatar: ctx.request.body.avatar,phone_number: ctx.request.body.phone_number,address: ctx.request.body.address}, function (err, user) {
       if (err) {
@@ -158,7 +158,7 @@ exports.api = {
     });
   },
   delete: (ctx, next) => {
-    var user_id = req.api_user._id;
+    var user_id = ctx.api_user._id;
     var id = ctx.params.user_id;
 
     return User.deleteByIdAsync(id).then(function(){
