@@ -44,7 +44,7 @@ app.use((ctx, next) => {
 
 // router.use('/', index.routes());
 // router.use('/users', users.routes());
-mount_routes(app, __dirname + '/app/routes2', true);
+mount_routes(app, __dirname + '/app/routes', true);
 
 app.use(router.routes(), router.allowedMethods());
 // response
