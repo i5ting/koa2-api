@@ -94,7 +94,6 @@ exports.destroy = (ctx, next) => {
     ', params: ' + JSON.stringify(ctx.params) + ', body: ' + JSON.stringify(ctx.request.body));
   var id = ctx.params.id;
   return User.deleteByIdAsync(id).then( () =>{
-    console.log(err);
     return ctx.body= ({
       data:{},
       status:{
