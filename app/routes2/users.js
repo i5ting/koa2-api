@@ -23,10 +23,11 @@ var $ = require('mount-controllers')(__dirname).users_controller;
  *
  */
 
-router.get('/new', $.new);  
-// router.get('/:id/edit', $.edit);
+router.get('/new', $.new); 
+ 
+router.get('/:id/edit', $.edit);
 
-router.get('/', co.wrap($.list));
+router.get('/', $.list);
 
 router.post('/', $.create);
 

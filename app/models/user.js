@@ -20,6 +20,7 @@ userSchema.methods.is_exist = function(cb) {
 };
 
 var User = mongoose.model('User', userSchema);
+
 var UserDao = new MongooseDao(User);
  
 module.exports = UserDao;
