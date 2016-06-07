@@ -6,9 +6,9 @@
 
 var jwt = require('jsonwebtoken');//用来创建和确认用户信息摘要
 // 检查用户会话
-module.exports = function(req, res, next) {
+module.exports = function(ctx, next) {
   if (process.env.moas) {
-    req.api_user={
+    ctx.api_user={
       _id : "55d8702d5472aa887b45f68c"
     }
     console.log('当前使用moas运行，不使用token即可访问！');
@@ -26,16 +26,17 @@ module.exports = function(req, res, next) {
         return res.json({ success: false, message: 'token信息错误.' });
       } else {
         // 如果没问题就把解码后的信息保存到请求中，供后面的路由使用
-        req.api_user = decoded;
-        console.dir(req.api_user);
-        next();
+        ctx.api_user = decoded;
+        console.dir(ctx.api_user);
+        return next();
       }
     });
   } else {
     // 如果没有token，则返回错误
-    return res.status(403).send({
+    ctx.status = 403
+    return ctx.body={
         success: false,
         message: '没有提供token！'
-    });
+    };
   }
 };

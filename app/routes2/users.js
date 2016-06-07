@@ -3,11 +3,6 @@ const co = require('co');
 
 var $ = require('mount-controllers')(__dirname).users_controller;
 
-
-// router.get('/', function (ctx, next) {
-//   ctx.body = 'this a users response!';
-// });
-
 /**
  * Auto generate RESTful url routes.
  *
@@ -36,11 +31,5 @@ router.get('/:id', $.show);
 router.patch('/:id', $.update);
 
 router.delete('/:id', $.destroy);
-//
-// router.route('/:id')
-//   .patch($.update)
-//   .get($.show)
-//   .delete($.destroy);
-  
 
 module.exports = router;

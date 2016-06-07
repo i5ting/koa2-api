@@ -29,7 +29,7 @@ exports.show = function (ctx, next) {
     ', params: ' + JSON.stringify(ctx.params));
   var id = ctx.params.id;
 
-  return User.getById(id, function(err, user){
+  return User.getByIdAsync(id).then(function(user){
     console.log(user);
     return ctx.render('users/show', {
       user : user
@@ -104,108 +104,30 @@ exports.destroy = function (ctx, next) {
 
 // -- custom
 
-exports.login = function (ctx, next) {
-  username = ctx.request.body.username;
-  password = ctx.request.body.password;
-
-  user = new User.model({
-    username: username,
-    password: password
-  });
-  console.log(user);
-  return user.is_exist(function(err, usr) {
-    console.log(usr);
-    console.log(req.session)
-
-    var half_hour;
-    if (err) {
-      console.error(err);
-      req.session.current_user = void 0;
-      return res.status(200).json({
-        data: {},
-        status: {
-          code: err.code,
-          msg: err.name + ' : ' + err.err
-        }
-      });
-    } else {
-      req.session.current_user = usr;
-      half_hour = 3600000 / 2;
-      req.session.cookie.expires = new Date(Date.now() + half_hour);
-      req.session.cookie.maxAge = half_hour;
-      console.dir(req.session.current_user);
-      return res.redirect('/');
-    }
-  });
-}
-
-exports.register = function (ctx, next) {
-  username = ctx.request.body.username;
-  password = ctx.request.body.password;
-
-  user = new User.model({
-    username: username,
-    password: password
-  });
-
-  User.create({
-    username: ctx.request.body.username,
-    password: ctx.request.body.password
-  }, function(err, user){
-    console.log(user);
-    if(err){
-      return res.redirect('/users/register');
-    }else{
-      return res.redirect('/users/login');
-    }
-  });
-}
-
-exports.login_get = function (ctx, next) {
-  if(req.session.current_user){
-    return res.redirect('/');
-  }
-
-  return ctx.render('users/login',{});
-}
-
-exports.register_get = function (ctx, next) {
-  return ctx.render('users/register',{});
-}
-
-exports.logout = function (ctx, next) {
-  return ctx.render('users/register',{});
-}
-
-
 // -- custom api
 
 exports.api = {
   list: function (ctx, next) {
-    var user_id = req.api_user._id;
+    var user_id = ctx.api_user._id;
 
-    User.query({}, function (err, users) {
-      if (err) {
-        return res.api_error(err);
-      }
-
-      res.api({
+    return User.queryAsync({}).then((users) => {
+      return ctx.api({
         users : users
       })
+    }).catch((err)=>{
+      return ctx.api_error(err);
     });
   },
   show: function (ctx, next) {
-    var user_id = req.api_user._id;
+    var user_id = ctx.api_user._id;
     var id = ctx.params.user_id;
 
-    User.getById(id, function (err, user) {
-      if (err) {
-        return res.api_error(err);
-      }
-
-      res.api({
+    return User.getByIdAsync(id).then((user)=>{
+      return ctx.api({
         user : user
       });
+    }).catch((err)=>{
+      return ctx.api_error(err);
     });
   },
   create: function (ctx, next) {
@@ -213,7 +135,7 @@ exports.api = {
 
     User.create({username: ctx.request.body.username,password: ctx.request.body.password,avatar: ctx.request.body.avatar,phone_number: ctx.request.body.phone_number,address: ctx.request.body.address}, function (err, user) {
       if (err) {
-        return res.api_error(err);
+        return ctx.api_error(err);
       }
 
       res.json({
@@ -226,10 +148,10 @@ exports.api = {
     var id = ctx.params.user_id;
     User.updateById(id, {username: ctx.request.body.username,password: ctx.request.body.password,avatar: ctx.request.body.avatar,phone_number: ctx.request.body.phone_number,address: ctx.request.body.address}, function (err, user) {
       if (err) {
-        return res.api_error(err);
+        return ctx.api_error(err);
       }
 
-      res.api({
+      ctx.api({
         user : user,
         redirect : '/users/' + id
       })
@@ -241,10 +163,10 @@ exports.api = {
 
     User.deleteById(id, function (err) {
       if (err) {
-        return res.api_error(err);
+        return ctx.api_error(err);
       }
 
-      res.api({id: id})
+      ctx.api({id: id})
     });
   }
 }
