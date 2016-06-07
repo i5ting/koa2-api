@@ -43,13 +43,15 @@ exports.edit = (ctx, next) => {
 
   var id = ctx.params.id;
 
-  return User.getById(id, function(err, user){
+  return User.getByIdAsync(id).then(user =>{
     console.log(user);
     user._action = 'edit';
 
     return ctx.render('users/edit', {
       user : user
     })
+  }).catch((err)=>{
+    return ctx.api_error(err);
   });
 };
 
@@ -57,11 +59,14 @@ exports.create = (ctx, next) => {
   console.log(ctx.method + ' /users => create, query: ' + JSON.stringify(ctx.query) +
     ', params: ' + JSON.stringify(ctx.params) + ', body: ' + JSON.stringify(ctx.request.body));
 
-    return User.create({username: ctx.request.body.username,password: ctx.request.body.password,avatar: ctx.request.body.avatar,phone_number: ctx.request.body.phone_number,address: ctx.request.body.address}, function(err, user){
+    return User.createAsync({username: ctx.request.body.username,password: ctx.request.body.password,avatar: ctx.request.body.avatar,phone_number: ctx.request.body.phone_number,address: ctx.request.body.address})
+    .then(user => {
       console.log(user);
       return ctx.render('users/show', {
         user : user
       })
+    }).catch((err)=>{
+      return ctx.api_error(err);
     });
 };
 
@@ -71,9 +76,8 @@ exports.update = (ctx, next) => {
 
     var id = ctx.params.id;
 
-    return User.updateById(id,{username: ctx.request.body.username,password: ctx.request.body.password,avatar: ctx.request.body.avatar,phone_number: ctx.request.body.phone_number,address: ctx.request.body.address}, function(err, user){
-      console.log(user);
-
+    return User.updateByIdAsync(id,{username: ctx.request.body.username,password: ctx.request.body.password,avatar: ctx.request.body.avatar,phone_number: ctx.request.body.phone_number,address: ctx.request.body.address})
+    .then(user => {
       return ctx.body = ({
         data:{
           redirect : '/users/' + id
@@ -83,6 +87,8 @@ exports.update = (ctx, next) => {
           msg  : 'delete success!'
         }
       });
+    }).catch((err)=>{
+      return ctx.api_error(err);
     });
 };
 
@@ -90,8 +96,7 @@ exports.destroy = (ctx, next) => {
   console.log(ctx.method + ' /users/:id => destroy, query: ' + JSON.stringify(ctx.query) +
     ', params: ' + JSON.stringify(ctx.params) + ', body: ' + JSON.stringify(ctx.request.body));
   var id = ctx.params.id;
-  return User.deleteById(id, function(err){
-    console.log(err);
+  return User.deleteByIdAsync(id).then(()=> {
     return ctx.body= ({
       data:{},
       status:{
@@ -99,6 +104,8 @@ exports.destroy = (ctx, next) => {
         msg  : 'delete success!'
       }
     });
+  }).catch((err)=>{
+    return ctx.api_error(err);
   });
 };
 
