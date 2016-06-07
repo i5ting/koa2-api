@@ -105,7 +105,6 @@ exports.destroy = (ctx, next) => {
 // -- custom
 
 // -- custom api
-
 exports.api = {
   list: (ctx, next) => {
     var user_id = ctx.api_user._id;
@@ -133,28 +132,25 @@ exports.api = {
   create: (ctx, next) => {
     var user_id = ctx.api_user._id;
 
-    User.create({username: ctx.request.body.username,password: ctx.request.body.password,avatar: ctx.request.body.avatar,phone_number: ctx.request.body.phone_number,address: ctx.request.body.address}, function (err, user) {
-      if (err) {
-        return ctx.api_error(err);
-      }
-
-      res.json({
+    return User.createAsync({username: ctx.request.body.username,password: ctx.request.body.password,avatar: ctx.request.body.avatar,phone_number: ctx.request.body.phone_number,address: ctx.request.body.address}).then(user=> {
+      return ctx.body = ({
         user : user
       })
+    }).catch((err)=>{
+      return ctx.api_error(err);
     });
+
   },
   update: (ctx, next) => {
     var user_id = ctx.api_user._id;
     var id = ctx.params.user_id;
-    User.updateById(id, {username: ctx.request.body.username,password: ctx.request.body.password,avatar: ctx.request.body.avatar,phone_number: ctx.request.body.phone_number,address: ctx.request.body.address}, function (err, user) {
-      if (err) {
-        return ctx.api_error(err);
-      }
-
-      ctx.api({
+    return User.updateByIdAsync(id, {username: ctx.request.body.username,password: ctx.request.body.password,avatar: ctx.request.body.avatar,phone_number: ctx.request.body.phone_number,address: ctx.request.body.address}).then(user=> {
+      return ctx.api({
         user : user,
         redirect : '/users/' + id
       })
+    }).catch((err)=>{
+      return ctx.api_error(err);
     });
   },
   delete: (ctx, next) => {

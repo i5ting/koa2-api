@@ -2,14 +2,46 @@ import test from 'ava';
 
 var superkoa = require('superkoa')
 
-test.cb("superkoa()", t => {
+var model = 'users'
+
+test.cb("GET /api/" + model, t => {
   superkoa()
-    .get("/")
-    .expect(200, function (err, res) {
-      
-      t.ifError(err)
-      var userId = res.body.id;
-      t.is(res.text, 'Hello Koa', 'res.text == Hello Koa')
-      t.end()
-    });
+    .get("/api/" + model)
+    .set('Accept', 'application/json')
+    .expect('Content-Type', /json/)
+    .expect(200, t.end);
+});
+ 
+test.cb("POST /api/" + model, t => {
+  superkoa()
+    .post("/api/" + model)
+    .field('username', 'my awesome avatar')
+    .set('Accept', 'application/json')
+    .expect('Content-Type', /json/)
+    .expect(200, t.end);
+});
+
+test.cb("GET /api/" + model + '/:user_id', t => {
+  superkoa()
+    .get("/api/" + model + '/:user_id')
+    .set('Accept', 'application/json')
+    .expect('Content-Type', /json/)
+    .expect(200, t.end);
+});
+
+test.cb("PATCH /api/" + model + '/:user_id', t => {
+  superkoa()
+    .patch("/api/" + model + '/:user_id')
+    .field('username', 'my awesome avatar')
+    .set('Accept', 'application/json')
+    .expect('Content-Type', /json/)
+    .expect(200, t.end);
+});
+
+test.cb("GET /api/" + model + '/:user_id', t => {
+  superkoa()
+    .delete("/api/" + model + '/:user_id')
+    .set('Accept', 'application/json')
+    .expect('Content-Type', /json/)
+    .expect(200, t.end);
 });
