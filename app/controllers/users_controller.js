@@ -4,7 +4,7 @@
 
 var User = require('../models/user');
 
-exports.list = function (ctx, next) {
+exports.list = (ctx, next) => {
   console.log(ctx.method + ' /users => list, query: ' + JSON.stringify(ctx.query));
 
   return User.getAllAsync().then((users)=>{
@@ -14,7 +14,7 @@ exports.list = function (ctx, next) {
   })
 };
 
-exports.new = function (ctx, next) {
+exports.new = (ctx, next) => {
   console.log(ctx.method + ' /users/new => new, query: ' + JSON.stringify(ctx.query));
 
   return ctx.render('users/new', {
@@ -24,7 +24,7 @@ exports.new = function (ctx, next) {
   })
 };
 
-exports.show = function (ctx, next) {
+exports.show = (ctx, next) => {
   console.log(ctx.method + ' /users/:id => show, query: ' + JSON.stringify(ctx.query) +
     ', params: ' + JSON.stringify(ctx.params));
   var id = ctx.params.id;
@@ -37,7 +37,7 @@ exports.show = function (ctx, next) {
   });
 };
 
-exports.edit = function (ctx, next) {
+exports.edit = (ctx, next) => {
   console.log(ctx.method + ' /users/:id/edit => edit, query: ' + JSON.stringify(ctx.query) +
     ', params: ' + JSON.stringify(ctx.params));
 
@@ -53,7 +53,7 @@ exports.edit = function (ctx, next) {
   });
 };
 
-exports.create = function (ctx, next) {
+exports.create = (ctx, next) => {
   console.log(ctx.method + ' /users => create, query: ' + JSON.stringify(ctx.query) +
     ', params: ' + JSON.stringify(ctx.params) + ', body: ' + JSON.stringify(ctx.request.body));
 
@@ -65,7 +65,7 @@ exports.create = function (ctx, next) {
     });
 };
 
-exports.update = function (ctx, next) {
+exports.update = (ctx, next) => {
   console.log(ctx.method + ' /users/:id => update, query: ' + JSON.stringify(ctx.query) +
     ', params: ' + JSON.stringify(ctx.params) + ', body: ' + JSON.stringify(ctx.request.body));
 
@@ -86,7 +86,7 @@ exports.update = function (ctx, next) {
     });
 };
 
-exports.destroy = function (ctx, next) {
+exports.destroy = (ctx, next) => {
   console.log(ctx.method + ' /users/:id => destroy, query: ' + JSON.stringify(ctx.query) +
     ', params: ' + JSON.stringify(ctx.params) + ', body: ' + JSON.stringify(ctx.request.body));
   var id = ctx.params.id;
@@ -107,7 +107,7 @@ exports.destroy = function (ctx, next) {
 // -- custom api
 
 exports.api = {
-  list: function (ctx, next) {
+  list: (ctx, next) => {
     var user_id = ctx.api_user._id;
 
     return User.queryAsync({}).then((users) => {
@@ -118,7 +118,7 @@ exports.api = {
       return ctx.api_error(err);
     });
   },
-  show: function (ctx, next) {
+  show: (ctx, next) => {
     var user_id = ctx.api_user._id;
     var id = ctx.params.user_id;
 
@@ -130,7 +130,7 @@ exports.api = {
       return ctx.api_error(err);
     });
   },
-  create: function (ctx, next) {
+  create: (ctx, next) => {
     var user_id = req.api_user._id;
 
     User.create({username: ctx.request.body.username,password: ctx.request.body.password,avatar: ctx.request.body.avatar,phone_number: ctx.request.body.phone_number,address: ctx.request.body.address}, function (err, user) {
@@ -143,7 +143,7 @@ exports.api = {
       })
     });
   },
-  update: function (ctx, next) {
+  update: (ctx, next) => {
     var user_id = req.api_user._id;
     var id = ctx.params.user_id;
     User.updateById(id, {username: ctx.request.body.username,password: ctx.request.body.password,avatar: ctx.request.body.avatar,phone_number: ctx.request.body.phone_number,address: ctx.request.body.address}, function (err, user) {
@@ -157,16 +157,14 @@ exports.api = {
       })
     });
   },
-  delete: function (ctx, next) {
+  delete: (ctx, next) => {
     var user_id = req.api_user._id;
     var id = ctx.params.user_id;
 
-    User.deleteById(id, function (err) {
-      if (err) {
-        return ctx.api_error(err);
-      }
-
-      ctx.api({id: id})
-    });
+    return User.deleteByIdAsync(id).then(function(){
+      return ctx.api({id: id})
+    }).catch((err)=>{
+      return ctx.api_error(err);
+    }); 
   }
 }
