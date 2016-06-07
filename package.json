@@ -28,7 +28,7 @@
     "log4js": "^0.6.26",
     "moa-plugin-user": "^1.0.1",
     "mongoose": "4.0.5",
-    "mongoosedao": "^1.0.13",
+    "mongoosedao": "^2.0.2",
     "morgan": "~1.6.1",
     "mount-controllers": "^1.0.7",
     "mount-koa-routes": "^2.0.1",
