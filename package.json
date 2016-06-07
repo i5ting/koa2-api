@@ -26,7 +26,6 @@
     "koa.res.api": "^2.0.0",
     "kp": "^1.1.0",
     "log4js": "^0.6.26",
-    "moa-plugin-user": "^1.0.1",
     "mongoose": "4.0.5",
     "mongoosedao": "^2.0.2",
     "morgan": "~1.6.1",
