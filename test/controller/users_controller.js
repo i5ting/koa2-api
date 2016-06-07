@@ -1,16 +1,15 @@
-var request = require('supertest');
-var assert  = require('chai').assert;
-var expect  = require('chai').expect;
-require('chai').should();
+import test from 'ava';
 
-var app = require('../../app');
+var superkoa = require('superkoa')
 
-describe('GET /users', function(){
-  it('respond with json or msgpack', function(done){
-    request(app)
-      .get('/api/user/login')
-      .set('Accept', 'application/json')
-      .expect('Content-Type', /json|msgpack/)
-      .expect(200, done);
-  })
-})
+test.cb("superkoa()", t => {
+  superkoa()
+    .get("/")
+    .expect(200, function (err, res) {
+      
+      t.ifError(err)
+      var userId = res.body.id;
+      t.is(res.text, 'Hello Koa', 'res.text == Hello Koa')
+      t.end()
+    });
+});
