@@ -1,8 +1,11 @@
 /**
- * Created by sang on 01/06/14.
+ * Created by Moajs on June 8th 2016, 12:55:48 am.
  */
+ 
+var $models = require('mount-models')(__dirname);
 
-var User = require('../models/user');
+var User = $models.user;
+
 
 exports.list = (ctx, next) => {
   console.log(ctx.method + ' /users => list, query: ' + JSON.stringify(ctx.query));
@@ -43,15 +46,13 @@ exports.edit = (ctx, next) => {
 
   var id = ctx.params.id;
 
-  return User.getByIdAsync(id).then(user =>{
+  return User.getById(id, function(err, user){
     console.log(user);
     user._action = 'edit';
 
     return ctx.render('users/edit', {
       user : user
     })
-  }).catch((err)=>{
-    return ctx.api_error(err);
   });
 };
 
@@ -59,15 +60,12 @@ exports.create = (ctx, next) => {
   console.log(ctx.method + ' /users => create, query: ' + JSON.stringify(ctx.query) +
     ', params: ' + JSON.stringify(ctx.params) + ', body: ' + JSON.stringify(ctx.request.body));
 
-    return User.createAsync({username: ctx.request.body.username,password: ctx.request.body.password,avatar: ctx.request.body.avatar,phone_number: ctx.request.body.phone_number,address: ctx.request.body.address})
-    .then(user => {
+    return User.createAsync({name: req.body.name,password: req.body.password}).then( user => {
       console.log(user);
       return ctx.render('users/show', {
         user : user
       })
-    }).catch((err)=>{
-      return ctx.api_error(err);
-    });
+    })
 };
 
 exports.update = (ctx, next) => {
@@ -76,8 +74,9 @@ exports.update = (ctx, next) => {
 
     var id = ctx.params.id;
 
-    return User.updateByIdAsync(id,{username: ctx.request.body.username,password: ctx.request.body.password,avatar: ctx.request.body.avatar,phone_number: ctx.request.body.phone_number,address: ctx.request.body.address})
-    .then(user => {
+    return User.updateById(id,{name: req.body.name,password: req.body.password}).then( user => {
+      console.log(user);
+
       return ctx.body = ({
         data:{
           redirect : '/users/' + id
@@ -87,8 +86,6 @@ exports.update = (ctx, next) => {
           msg  : 'delete success!'
         }
       });
-    }).catch((err)=>{
-      return ctx.api_error(err);
     });
 };
 
@@ -96,7 +93,8 @@ exports.destroy = (ctx, next) => {
   console.log(ctx.method + ' /users/:id => destroy, query: ' + JSON.stringify(ctx.query) +
     ', params: ' + JSON.stringify(ctx.params) + ', body: ' + JSON.stringify(ctx.request.body));
   var id = ctx.params.id;
-  return User.deleteByIdAsync(id).then(()=> {
+  return User.deleteByIdAsync(id).then( () =>{
+    console.log(err);
     return ctx.body= ({
       data:{},
       status:{
@@ -105,7 +103,7 @@ exports.destroy = (ctx, next) => {
       }
     });
   }).catch((err)=>{
-    return ctx.api_error(err);
+      return ctx.api_error(err);
   });
 };
 
@@ -139,7 +137,7 @@ exports.api = {
   create: (ctx, next) => {
     var user_id = ctx.api_user._id;
 
-    return User.createAsync({username: ctx.request.body.username,password: ctx.request.body.password,avatar: ctx.request.body.avatar,phone_number: ctx.request.body.phone_number,address: ctx.request.body.address}).then(user=> {
+    return User.createAsync({name: req.body.name,password: req.body.password}).then(user=> {
       return ctx.body = ({
         user : user
       })
@@ -151,7 +149,7 @@ exports.api = {
   update: (ctx, next) => {
     var user_id = ctx.api_user._id;
     var id = ctx.params.user_id;
-    return User.updateByIdAsync(id, {username: ctx.request.body.username,password: ctx.request.body.password,avatar: ctx.request.body.avatar,phone_number: ctx.request.body.phone_number,address: ctx.request.body.address}).then(user=> {
+    return User.updateByIdAsync(id, {name: req.body.name,password: req.body.password}).then(user=> {
       return ctx.api({
         user : user,
         redirect : '/users/' + id

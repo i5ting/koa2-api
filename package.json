@@ -32,6 +32,7 @@
     "mount-controllers": "^1.0.7",
     "mount-koa-routes": "^2.0.1",
     "mount-middlewares": "^1.0.5",
+    "mount-models": "^1.0.8",
     "mount-services": "^1.0.7",
     "msgpack5": "^3.1.0",
     "res.api": "^1.0.11"
