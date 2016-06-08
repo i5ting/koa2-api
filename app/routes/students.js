@@ -1,3 +1,5 @@
+"use strict";
+
 var router = require('koa-router')();
 const co = require('co');
 
@@ -27,20 +29,47 @@ var $ = require('mount-controllers')(__dirname).students_controller;
  *
  */
 
-router.get('/new', co.wrap($.new)); 
+router.get('/new', (ctx, next) => {
+  return co.wrap($.new)(ctx, next).catch(err => {
+    return ctx.api_error(err);
+  })
+}); 
  
-router.get('/:id/edit', co.wrap($.edit));
+router.get('/:id/edit', (ctx, next) => {
+  return co.wrap($.edit)(ctx, next).catch(err => {
+    return ctx.api_error(err);
+  })
+}); 
 
-router.get('/', co.wrap($.list));
+router.get('/',  (ctx, next) => {
+  return co.wrap($.list)(ctx, next).catch(err => {
+    return ctx.api_error(err);
+  })
+}); 
 
-router.post('/', co.wrap($.create));
+router.post('/', (ctx, next) => {
+  return co.wrap($.create)(ctx, next).catch(err => {
+    return ctx.api_error(err);
+  })
+});
 
-router.get('/:id', co.wrap($.show));
+router.get('/:id', (ctx, next) => {
+  return co.wrap($.show)(ctx, next).catch(err => {
+    return ctx.api_error(err);
+  })
+});
 
-router.patch('/:id', co.wrap($.update));
+router.patch('/:id', (ctx, next) => {
+  return co.wrap($.update)(ctx, next).catch(err => {
+    return ctx.api_error(err);
+  })
+});
 
-router.delete('/:id', co.wrap($.destroy));
-
+router.delete('/:id', (ctx, next) => {
+  return co.wrap($.destroy)(ctx, next).catch(err => {
+    return ctx.api_error(err);
+  })
+});
 
 // -- custom routes
 
