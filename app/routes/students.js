@@ -27,19 +27,19 @@ var $ = require('mount-controllers')(__dirname).students_controller;
  *
  */
 
-router.get('/new', $.new); 
+router.get('/new', co.wrap($.new)); 
  
-router.get('/:id/edit', $.edit);
+router.get('/:id/edit', co.wrap($.edit));
 
-router.get('/', $.list);
+router.get('/', co.wrap($.list));
 
-router.post('/', $.create);
+router.post('/', co.wrap($.create));
 
-router.get('/:id', $.show);
+router.get('/:id', co.wrap($.show));
 
-router.patch('/:id', $.update);
+router.patch('/:id', co.wrap($.update));
 
-router.delete('/:id', $.destroy);
+router.delete('/:id', co.wrap($.destroy));
 
 
 // -- custom routes

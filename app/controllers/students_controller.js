@@ -6,8 +6,7 @@ var $models = require('mount-models')(__dirname);
 
 var Student = $models.student;
 
-
-exports.list = (ctx, next) => {
+exports.list = function *(ctx, next) {
   console.log(ctx.method + ' /students => list, query: ' + JSON.stringify(ctx.query));
 
   return Student.getAllAsync().then((students)=>{
@@ -17,7 +16,7 @@ exports.list = (ctx, next) => {
   })
 };
 
-exports.new = (ctx, next) => {
+exports.new = function *(ctx, next) {
   console.log(ctx.method + ' /students/new => new, query: ' + JSON.stringify(ctx.query));
 
   return ctx.render('students/new', {
@@ -27,7 +26,7 @@ exports.new = (ctx, next) => {
   })
 };
 
-exports.show = (ctx, next) => {
+exports.show = function *(ctx, next) {
   console.log(ctx.method + ' /students/:id => show, query: ' + JSON.stringify(ctx.query) +
     ', params: ' + JSON.stringify(ctx.params));
   var id = ctx.params.id;
@@ -40,7 +39,7 @@ exports.show = (ctx, next) => {
   });
 };
 
-exports.edit = (ctx, next) => {
+exports.edit = function *(ctx, next) {
   console.log(ctx.method + ' /students/:id/edit => edit, query: ' + JSON.stringify(ctx.query) +
     ', params: ' + JSON.stringify(ctx.params));
 
@@ -56,7 +55,7 @@ exports.edit = (ctx, next) => {
   });
 };
 
-exports.create = (ctx, next) => {
+exports.create = function *(ctx, next) {
   console.log(ctx.method + ' /students => create, query: ' + JSON.stringify(ctx.query) +
     ', params: ' + JSON.stringify(ctx.params) + ', body: ' + JSON.stringify(ctx.request.body));
 
@@ -68,7 +67,7 @@ exports.create = (ctx, next) => {
     })
 };
 
-exports.update = (ctx, next) => {
+exports.update = function *(ctx, next) {
   console.log(ctx.method + ' /students/:id => update, query: ' + JSON.stringify(ctx.query) +
     ', params: ' + JSON.stringify(ctx.params) + ', body: ' + JSON.stringify(ctx.request.body));
 
@@ -89,7 +88,7 @@ exports.update = (ctx, next) => {
     });
 };
 
-exports.destroy = (ctx, next) => {
+exports.destroy = function *(ctx, next) {
   console.log(ctx.method + ' /students/:id => destroy, query: ' + JSON.stringify(ctx.query) +
     ', params: ' + JSON.stringify(ctx.params) + ', body: ' + JSON.stringify(ctx.request.body));
   var id = ctx.params.id;
@@ -110,7 +109,7 @@ exports.destroy = (ctx, next) => {
 
 // -- custom api
 exports.api = {
-  list: (ctx, next) => {
+  list: function *(ctx, next) {
     var student_id = ctx.api_student._id;
 
     return Student.queryAsync({}).then((students) => {
@@ -121,7 +120,7 @@ exports.api = {
       return ctx.api_error(err);
     });
   },
-  show: (ctx, next) => {
+  show: function *(ctx, next) {
     var student_id = ctx.api_student._id;
     var id = ctx.params.student_id;
 
@@ -133,7 +132,7 @@ exports.api = {
       return ctx.api_error(err);
     });
   },
-  create: (ctx, next) => {
+  create: function *(ctx, next) {
     var student_id = ctx.api_student._id;
 
     return Student.createAsync({name: ctx.request.body.name,password: ctx.request.body.password}).then(student=> {
@@ -145,7 +144,7 @@ exports.api = {
     });
 
   },
-  update: (ctx, next) => {
+  update: function *(ctx, next) {
     var student_id = ctx.api_student._id;
     var id = ctx.params.student_id;
     return Student.updateByIdAsync(id, {name: ctx.request.body.name,password: ctx.request.body.password}).then(student=> {
@@ -157,7 +156,7 @@ exports.api = {
       return ctx.api_error(err);
     });
   },
-  delete: (ctx, next) => {
+  delete: function *(ctx, next) {
     var student_id = ctx.api_student._id;
     var id = ctx.params.student_id;
 
