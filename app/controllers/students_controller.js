@@ -8,12 +8,17 @@ var Student = $models.student;
 
 exports.list = function *(ctx, next) {
   console.log(ctx.method + ' /students => list, query: ' + JSON.stringify(ctx.query));
-
-  return Student.getAllAsync().then((students)=>{
-    return ctx.render('students/index', {
-      students : students
-    })
+  
+  var students = yield Student.getAllAsync();
+  
+  yield ctx.render('students/index', {
+    students : students
   })
+  // return Student.getAllAsync().then((students)=>{
+  //   return ctx.render('students/index', {
+  //     students : students
+  //   })
+  // })
 };
 
 exports.new = function *(ctx, next) {
