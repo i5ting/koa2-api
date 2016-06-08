@@ -1,18 +1,11 @@
 "use strict";
 
-var router = require('koa-router')();
+const router = require('koa-router')();
 const co = require('co');
-
-// mount all middlewares in app/middlewares, examples:
-// 
-// router.route('/')
-//  .get($middlewares.check_session_is_expired, $.list)
-//  .post($.create);
-// 
-var $middlewares  = require('mount-middlewares')(__dirname);
+const $middlewares  = require('mount-middlewares')(__dirname);
 
 // core controller
-var $ = require('mount-controllers')(__dirname).students_controller;
+const $ = require('mount-controllers')(__dirname).students_controller;
 
 /**
  * Auto generate RESTful url routes.

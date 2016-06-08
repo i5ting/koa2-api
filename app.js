@@ -1,4 +1,6 @@
-require('./init')
+"use strict";
+
+// require('./init')
 require('./db')
 
 var log4js        = require('log4js'); 

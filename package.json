@@ -34,7 +34,8 @@
     "mount-middlewares": "^1.0.5",
     "mount-models": "^1.0.8",
     "mount-services": "^1.0.7",
-    "msgpack5": "^3.1.0"
+    "msgpack5": "^3.1.0",
+    "runkoa": "^1.5.2"
   },
   "devDependencies": {
     "ava": "^0.15.2",
