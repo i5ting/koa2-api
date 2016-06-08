@@ -1,7 +1,5 @@
 var router = require('koa-router')();
 
-
-
 var $ = require('mount-controllers')(__dirname).users_controller;
 
 var $middlewares  = require('mount-middlewares')(__dirname);
