@@ -1,9 +1,9 @@
 "use strict";
 
-// require('./init')
+require('./init')
 require('./db')
 
-var log4js        = require('log4js'); 
+var log4js        = require('koa-log4'); 
 var res_api       = require('res.api');
 var log           = log4js.getLogger("moa-api");
 var res_api       = require('koa.res.api');
@@ -27,6 +27,9 @@ app.use(convert(bodyparser));
 app.use(convert(json()));
 app.use(convert(logger()));
 app.use(convert(require('koa-static')(__dirname + '/public')));
+
+log4js.configure('config/log4js.json', { reloadSecs: 300 });
+app.use(log4js.koaLogger(log4js.getLogger("http"), { level: 'auto' }))
 
 app.use(res_api());
 
