@@ -4,6 +4,7 @@
   "private": false,
   "scripts": {
     "start": "./node_modules/.bin/supervisor ./bin/www",
+    "async": "./node_modules/.bin/supervisor ./bin/run",
     "pub": "npm publish ."
   },
   "dependencies": {

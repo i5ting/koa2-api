@@ -12,4 +12,19 @@
 
 - user 是common function
 - student 是GeneratorFunction
-- async functions暂未实现
+- cup 是async functions
+
+## 执行
+
+`async/await`需要
+
+```
+npm run async
+```
+
+其他
+
+```
+npm start
+```
+
